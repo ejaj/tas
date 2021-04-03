@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7.22
+    restart: always
+    volumes:
+      - .dbdata:/var/lib/mysql
+    environment:
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=tas
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=kazi
+      - MYSQL_ROOT_PASSWORD=kazi
+    ports:
+      - '3307:3306'
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tas
+    command: python manage.py runserver 0.0.0.0:8080
+    volumes:
+      - .:/tas
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
